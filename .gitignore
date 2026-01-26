@@ -3,6 +3,8 @@ data_info/
 output/
 shp/
 *.json
+!web/package.json
+!web/package-lock.json
 *.shp
 roadmap.txt
 .ipynb_checkpoints/
