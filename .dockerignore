@@ -1,0 +1,5 @@
+.git
+output/
+web/node_modules/
+__pycache__/
+*.pyc

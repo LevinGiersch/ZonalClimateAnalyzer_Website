@@ -462,11 +462,23 @@ def _purge_outputs_for_stem(stem: str) -> None:
                 pass
 
 
+def _local_raster_ready() -> bool:
+    if not RASTER_DIR.exists():
+        return False
+    if not any(RASTER_DIR.iterdir()):
+        return False
+    for ext in (".tif", ".asc", ".asc.gz"):
+        if any(RASTER_DIR.rglob(f"*{ext}")):
+            return True
+    return False
+
+
 def _run_analyzer(shp_path: Path, run_dir: Path) -> list[dict]:
     _purge_outputs_for_stem(shp_path.stem)
     with _analysis_lock():
         env = os.environ.copy()
-        env.setdefault("ZCA_SKIP_DWD_DOWNLOAD", "1")
+        if _local_raster_ready():
+            env.setdefault("ZCA_SKIP_DWD_DOWNLOAD", "1")
         process = subprocess.run(
             [sys.executable, str(BASE_DIR / "ZonalClimateAnalyzer.py"), str(shp_path)],
             text=True,
