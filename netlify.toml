@@ -1,0 +1,11 @@
+[build]
+  # leave your build command as-is if you already have one; pip will run after apt packages are installed
+  command = "pip install -r requirements.txt"
+  publish = "public"
+
+[[plugins]]
+package = "netlify-plugin-apt"
+
+  [plugins.inputs]
+  # install gdal and dev headers so gdal-config is available for building fiona
+  packages = ["gdal-bin", "libgdal-dev", "build-essential", "python3-dev"]
