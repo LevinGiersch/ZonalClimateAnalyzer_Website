@@ -1,5 +1,5 @@
 # ZonalClimateAnalyzer
-*Analyze the climate history for any area, line or point inside Germany with nothing more than a shapefile.*
+*Analyze the climate history for any area, line or point inside Germany with a vector upload (shapefile .zip with CRS, GeoPackage, or GeoJSON).*
 
 ---
 
@@ -44,10 +44,10 @@ source venv/bin/activate
 pip install -r requirements.txt
 
 # 4. Run the script
-python ZonalClimateAnalyzer.py
+python ZonalClimateAnalyzer.py /path/to/my_area.shp
 
-# 5. Follow the prompt:
-# Enter the path to the shapefile: /path/to/my_area.shp
+# 5. (Optional) Interactive prompt:
+# python ZonalClimateAnalyzer.py
 
 # 6. Wait until the process is finished
 ```
@@ -63,16 +63,17 @@ cd ZonalClimateAnalyzer
 pip install -r requirements.txt
 
 # 3. Run the script
-python ZonalClimateAnalyzer.py
+python ZonalClimateAnalyzer.py C:\path\to\my_area.shp
 
-# 4. Follow the prompt:
-# Enter the path to the shapefile: C:\path\to\my_area.shp
+# 4. (Optional) Interactive prompt:
+# python ZonalClimateAnalyzer.py
 
 # 5. Wait until the process is finished
 ```
 
 
 - Runtime hint: the first execution downloads ≈ 1 GB of rasters and can take 10–20 min (depending on your connection).
+- Use `--skip-download` (or set `ZCA_SKIP_DWD_DOWNLOAD=1`) if rasters are already available locally.
 
 ---
 
@@ -108,7 +109,7 @@ python ZonalClimateAnalyzer.py
 ---
 
 ## 6 | Known Limitations
-- Only works for **shapefiles**. Support for eg. geojson may be added in the future.
+- The CLI script expects a **shapefile** path. The web upload supports shapefile `.zip` bundles (with `.prj`), `.gpkg`, and `.geojson`.
 - Re‑downloads rasters each year; archive copies yourself for full reproducibility.
 
 ---
@@ -118,3 +119,44 @@ Always credit the **DWD Climate Data Center** when publishing derived work.
 
 > Deutscher Wetterdienst (2025): *Grids Germany – Annual*.
 https://opendata.dwd.de/climate_environment/CDC/grids_germany/annual/
+---
+
+## 8 | Web App (React + API)
+
+This repo now ships a minimal React UI and a small FastAPI server to upload a shapefile and return the generated plots.
+
+### Start the API
+
+```bash
+pip install -r requirements.txt
+python -m uvicorn api.server:app --reload --port 8000
+```
+
+The API expects `clamscan` to be available on the server for malware scanning.
+
+Optional API configuration (env vars):
+- `ZCA_ALLOWED_ORIGINS` (comma-separated list)
+- `ZCA_MAX_UPLOAD_MB` (default 200)
+- `ZCA_MAX_ZIP_FILES` (default 2000)
+- `ZCA_MAX_ZIP_UNCOMPRESSED_MB` (default 1600)
+- `ZCA_MAX_FEATURES` (default 2000)
+- `ZCA_MAX_VERTICES` (default 200000)
+- `ZCA_RUN_RETENTION_HOURS` (default 48)
+- `ZCA_MIN_FREE_DISK_GB` (default 2)
+- `ZCA_RATE_LIMIT_PER_MIN` (default 120, set 0 to disable)
+- `ZCA_LOCK_TTL_SECONDS` (default 14400)
+
+### Start the React app
+
+```bash
+cd web
+npm install
+npm run dev
+```
+
+Then open `http://localhost:5173` and upload one of:
+- `.zip` with full shapefile set (`.shp`, `.shx`, `.dbf`, `.prj`) — `.prj` is required
+- `.gpkg` (GeoPackage)
+- `.geojson` (GeoJSON; assumed EPSG:4326 if CRS is missing)
+
+You can also draw a polygon directly on the map in the UI and run the same analysis without uploading files. The valid area is limited to the raster grid coverage.

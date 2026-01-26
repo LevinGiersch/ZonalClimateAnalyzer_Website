@@ -1,0 +1,6 @@
+cd /home/luser/Documents/Code/Website/ZonalClimateAnalyzer
+python -m uvicorn api.server:app --reload --port 8000
+
+cd /home/luser/Documents/Code/Website/ZonalClimateAnalyzer/web
+npm install
+npm run dev

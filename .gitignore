@@ -7,3 +7,6 @@ shp/
 roadmap.txt
 .ipynb_checkpoints/
 .ipynb_checkpoints
+web/node_modules/
+**/__pycache__/
+*.pyc
