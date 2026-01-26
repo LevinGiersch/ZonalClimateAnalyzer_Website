@@ -394,7 +394,8 @@ def decompress_file(file: str) -> str:
         LOGGER.info("Filetype is already %s, no decompression needed", path.suffix)
         return str(path)
 
-    decompressed_file = Path(rename_dwd_file(file))
+    # Keep output alongside the source file instead of the current working directory.
+    decompressed_file = path.with_name(rename_dwd_file(path.name))
 
     # Unpack the mis-labelled “…asc.gz” archive (which is really a ZIP)
     if zipfile.is_zipfile(path) or ft_ext == "zip" or path.suffix.lower() == ".zip":
@@ -634,7 +635,7 @@ def zonal_climate_analysis(shp_input: str, raster_folder: str, prj_file: str) ->
         rasterstats_list.append(calculate_zonal_stats(shp_crs_dissolved, f)) # Append rasterstats to rasterstats_list
 
     # Combine rasterstats and the name of the raster the stats are calculated with
-    raster_path = str(DATA_DIR)
+    raster_path = str(raster_folder)
     filenames = [Path(fn).with_suffix('').name for fn in files_tif]
 
     # Delete deprecated files
