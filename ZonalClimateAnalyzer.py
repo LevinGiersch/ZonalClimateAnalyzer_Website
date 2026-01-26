@@ -14,6 +14,7 @@ import zipfile
 import gzip
 import filetype
 from tqdm import tqdm
+import pandas as pd
 
 import requests
 from requests.adapters import HTTPAdapter
@@ -482,6 +483,19 @@ def delete_raster_files(folder_path: str) -> None:
 # In[13]:
 
 
+def _coerce_gdf_for_shapefile(gdf: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
+    """
+    Converts pandas StringDtype columns to object dtype for shapefile writing.
+    """
+    gdf = gdf.copy()
+    for col in gdf.columns:
+        if col == gdf.geometry.name:
+            continue
+        if isinstance(gdf[col].dtype, pd.StringDtype):
+            gdf[col] = gdf[col].astype("object")
+    return gdf
+
+
 def change_shp_crs(shp_input: str, prj_txt: str) -> str:
     """
     Takes shp_input, transforms to crs (from prj.txt), outputs as shp_output
@@ -507,6 +521,7 @@ def change_shp_crs(shp_input: str, prj_txt: str) -> str:
 
     # Transform shp_input to target_crs
     gdf_transformed = gdf.to_crs(target_crs)
+    gdf_transformed = _coerce_gdf_for_shapefile(gdf_transformed)
 
     # Create Output Folder
     SHP_DIR.mkdir(parents=True, exist_ok=True)
@@ -538,6 +553,7 @@ def dissolve_shp(shp_input: str) -> str:
 
     # Dissolve features in gdf
     gdf_dissolved = gdf.dissolve()
+    gdf_dissolved = _coerce_gdf_for_shapefile(gdf_dissolved)
 
     # Create Output Folder
     SHP_DIR.mkdir(parents=True, exist_ok=True)
