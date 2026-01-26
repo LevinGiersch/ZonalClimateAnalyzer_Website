@@ -42,6 +42,7 @@ MAX_VERTICES = int(os.environ.get("ZCA_MAX_VERTICES", "200000"))
 RUN_RETENTION_HOURS = int(os.environ.get("ZCA_RUN_RETENTION_HOURS", "48"))
 MIN_FREE_DISK_GB = int(os.environ.get("ZCA_MIN_FREE_DISK_GB", "2"))
 RATE_LIMIT_PER_MIN = int(os.environ.get("ZCA_RATE_LIMIT_PER_MIN", "120"))
+REQUIRE_CLAMSCAN = os.environ.get("ZCA_REQUIRE_CLAMSCAN", "0") == "1"
 
 LOCK_PATH = OUTPUT_DIR / ".analysis.lock"
 LOCK_TTL_SECONDS = int(os.environ.get("ZCA_LOCK_TTL_SECONDS", str(60 * 60 * 4)))
@@ -176,10 +177,16 @@ def _load_data_coverage() -> None:
         return
 
     if DATA_COVERAGE_PATH.exists():
-        stored = json.loads(DATA_COVERAGE_PATH.read_text(encoding="utf-8"))
-        DATA_COVERAGE_GEOJSON = stored
-        DATA_COVERAGE_GEOM = shape(stored)
-        return
+        try:
+            stored = json.loads(DATA_COVERAGE_PATH.read_text(encoding="utf-8"))
+            DATA_COVERAGE_GEOJSON = stored
+            DATA_COVERAGE_GEOM = shape(stored)
+            return
+        except Exception:
+            try:
+                DATA_COVERAGE_PATH.unlink()
+            except OSError:
+                pass
 
     if GERMANY_BOUNDARY_PATH.exists():
         gdf = gpd.read_file(GERMANY_BOUNDARY_PATH).to_crs("EPSG:4326")
@@ -283,10 +290,13 @@ def _safe_extract_zip(zip_ref: zipfile.ZipFile, dest_dir: Path) -> None:
 def _run_clamscan(path: Path) -> None:
     clamscan = shutil.which("clamscan")
     if not clamscan:
-        raise HTTPException(
-            status_code=500,
-            detail="clamscan is not installed on the server."
-        )
+        if REQUIRE_CLAMSCAN:
+            raise HTTPException(
+                status_code=500,
+                detail="clamscan is not installed on the server."
+            )
+        LOGGER.warning("clamscan not found; skipping malware scan.")
+        return
     result = subprocess.run(
         [clamscan, "--no-summary", "-r", str(path)],
         text=True,

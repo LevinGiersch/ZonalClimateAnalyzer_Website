@@ -2,11 +2,14 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { GeoJSON, MapContainer, TileLayer, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet-draw';
+import fallbackCoverage from './assets/germany_coverage.json';
 
 const ACCEPTED = ['.zip', '.shp', '.gpkg', '.geojson'];
 const MAX_UPLOAD_MB = 200;
 const API_BASE = (import.meta.env.VITE_API_BASE || '').replace(/\/$/, '');
 const apiUrl = (path) => `${API_BASE}${path}`;
+const COVERAGE_TIMEOUT_MS = 2500;
+const ANALYZE_TIMEOUT_MS = 20 * 60 * 1000;
 
 // Fix default marker icons for Vite
 
@@ -97,10 +100,21 @@ function MapSizer() {
   React.useEffect(() => {
     const handleResize = () => map.invalidateSize();
     const timer = setTimeout(() => map.invalidateSize(), 200);
+    const timer2 = setTimeout(() => map.invalidateSize(), 800);
+    const container = map.getContainer();
+    let observer;
+    if (container && 'ResizeObserver' in window) {
+      observer = new ResizeObserver(() => map.invalidateSize());
+      observer.observe(container);
+    }
     window.addEventListener('resize', handleResize);
     return () => {
       clearTimeout(timer);
+      clearTimeout(timer2);
       window.removeEventListener('resize', handleResize);
+      if (observer) {
+        observer.disconnect();
+      }
     };
   }, [map]);
 
@@ -230,11 +244,24 @@ async function readJson(response) {
   }
 }
 
+async function fetchWithTimeout(url, options = {}, timeoutMs = 0) {
+  if (!timeoutMs) {
+    return fetch(url, options);
+  }
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    return await fetch(url, { ...options, signal: controller.signal });
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 export default function App() {
   const [mode, setMode] = useState('draw');
   const [file, setFile] = useState(null);
   const [drawnGeojson, setDrawnGeojson] = useState(null);
-  const [coverageGeojson, setCoverageGeojson] = useState(null);
+  const [coverageGeojson, setCoverageGeojson] = useState(fallbackCoverage || null);
   const [status, setStatus] = useState('idle');
   const [message, setMessage] = useState('');
   const [results, setResults] = useState([]);
@@ -254,14 +281,22 @@ export default function App() {
 
   React.useEffect(() => {
     const loadCoverage = async () => {
+      if (fallbackCoverage) {
+        setCoverageGeojson(fallbackCoverage);
+      }
       try {
-        const response = await fetch(apiUrl('/api/coverage'));
+        const response = await fetchWithTimeout(
+          apiUrl('/api/coverage'),
+          {},
+          COVERAGE_TIMEOUT_MS
+        );
         const payload = await readJson(response);
         if (response.ok && payload?.geojson) {
           setCoverageGeojson(payload.geojson);
+          return;
         }
       } catch (error) {
-        setCoverageGeojson(null);
+        // Fall back to bundled coverage if the API is unavailable.
       }
     };
     loadCoverage();
@@ -313,29 +348,38 @@ export default function App() {
 
     setStatus('uploading');
     setMessage('');
+    const processingTimer = setTimeout(() => {
+      setStatus('processing');
+    }, 1200);
 
     const body = new FormData();
     body.append('file', file);
 
     try {
-      const response = await fetch(apiUrl('/api/analyze'), {
-        method: 'POST',
-        body
-      });
+      const response = await fetchWithTimeout(
+        apiUrl('/api/analyze'),
+        { method: 'POST', body },
+        ANALYZE_TIMEOUT_MS
+      );
 
       const payload = await readJson(response);
       if (!response.ok) {
         throw new Error(payload?.detail || response.statusText || 'Analyse fehlgeschlagen.');
       }
 
-      setStatus('processing');
       setResults(payload.outputs || []);
       setZipUrl(payload.zipUrl || '');
       setStatus('done');
       setMessage(payload.message || 'Erfolg.');
     } catch (error) {
       setStatus('error');
-      setMessage(error.message || 'Unerwarteter Fehler.');
+      if (error.name === 'AbortError') {
+        setMessage('Analyse dauert zu lange. Bitte später erneut versuchen.');
+      } else {
+        setMessage(error.message || 'Unerwarteter Fehler.');
+      }
+    } finally {
+      clearTimeout(processingTimer);
     }
   };
 
@@ -348,27 +392,39 @@ export default function App() {
 
     setStatus('uploading');
     setMessage('');
+    const processingTimer = setTimeout(() => {
+      setStatus('processing');
+    }, 1200);
 
     try {
-      const response = await fetch(apiUrl('/api/analyze-geojson'), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ geojson: drawnGeojson })
-      });
+      const response = await fetchWithTimeout(
+        apiUrl('/api/analyze-geojson'),
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ geojson: drawnGeojson })
+        },
+        ANALYZE_TIMEOUT_MS
+      );
 
       const payload = await readJson(response);
       if (!response.ok) {
         throw new Error(payload?.detail || response.statusText || 'Analyse fehlgeschlagen.');
       }
 
-      setStatus('processing');
       setResults(payload.outputs || []);
       setZipUrl(payload.zipUrl || '');
       setStatus('done');
       setMessage(payload.message || 'Erfolg.');
     } catch (error) {
       setStatus('error');
-      setMessage(error.message || 'Unerwarteter Fehler.');
+      if (error.name === 'AbortError') {
+        setMessage('Analyse dauert zu lange. Bitte später erneut versuchen.');
+      } else {
+        setMessage(error.message || 'Unerwarteter Fehler.');
+      }
+    } finally {
+      clearTimeout(processingTimer);
     }
   };
 

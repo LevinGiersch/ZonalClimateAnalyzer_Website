@@ -5,6 +5,7 @@ shp/
 *.json
 !web/package.json
 !web/package-lock.json
+!web/src/assets/germany_coverage.json
 *.shp
 roadmap.txt
 .ipynb_checkpoints/
