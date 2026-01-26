@@ -5,6 +5,8 @@ import 'leaflet-draw';
 
 const ACCEPTED = ['.zip', '.shp', '.gpkg', '.geojson'];
 const MAX_UPLOAD_MB = 200;
+const API_BASE = (import.meta.env.VITE_API_BASE || '').replace(/\/$/, '');
+const apiUrl = (path) => `${API_BASE}${path}`;
 
 // Fix default marker icons for Vite
 
@@ -253,7 +255,7 @@ export default function App() {
   React.useEffect(() => {
     const loadCoverage = async () => {
       try {
-        const response = await fetch('/api/coverage');
+        const response = await fetch(apiUrl('/api/coverage'));
         const payload = await readJson(response);
         if (response.ok && payload?.geojson) {
           setCoverageGeojson(payload.geojson);
@@ -316,7 +318,7 @@ export default function App() {
     body.append('file', file);
 
     try {
-      const response = await fetch('/api/analyze', {
+      const response = await fetch(apiUrl('/api/analyze'), {
         method: 'POST',
         body
       });
@@ -348,7 +350,7 @@ export default function App() {
     setMessage('');
 
     try {
-      const response = await fetch('/api/analyze-geojson', {
+      const response = await fetch(apiUrl('/api/analyze-geojson'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ geojson: drawnGeojson })
