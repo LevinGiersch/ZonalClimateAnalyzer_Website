@@ -5,6 +5,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 5173,
+    allowedHosts: ['devserver-main--sage-babka-7d9e31.netlify.app'],
     proxy: {
       '/api': 'http://localhost:8000',
       '/runs': 'http://localhost:8000'
