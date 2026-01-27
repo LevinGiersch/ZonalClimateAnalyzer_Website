@@ -1,0 +1,15 @@
+# ROADMAP:
+
+
+# 1.
+# when using a shapefile with multiple features, the output of lokal_climate_analysis() has severals rasterstats dicts as values but it is not clear to which feature each rasterstat dict belongs.
+# -> find a way to include the information about the feature of the shapefile the rasterstats calculation is performed on
+# -> all in one big dict? split the shapefile into its features and perform lokal_climate_analysis() on each feature isolated?
+
+# 3. 
+# find a good way to add the rasterstats to the shapefile so i can have a nice interactive geopandas map and when i click on the shapefile it gives me all the relevant information from the raster calculations.
+
+#4 
+# in the end run latex file automatically by typing "pdflatex 'filename'" in the terminal\
+
+check if shp is in germany
