@@ -426,12 +426,31 @@ p {
   padding: 8px 12px;
   border-radius: 999px;
   border: 1px solid var(--line);
-  background: transparent;
+  background: rgba(246, 243, 236, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+
+.ghost:hover {
+  background: rgba(246, 243, 236, 0.12);
+  border-color: rgba(246, 243, 236, 0.25);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+  transform: translateY(-1px);
+}
+
+.ghost:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.ghost.pulse {
+  animation: ghostPulse 0.7s ease-out;
 }
 
 .ghost:disabled {
   opacity: 0.55;
   cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
 }
 
 .footer {
@@ -487,32 +506,54 @@ p {
   position: relative;
   height: 8px;
   border-radius: 999px;
-  background: rgba(246, 243, 236, 0.12);
+  background: rgba(246, 243, 236, 0.1);
   overflow: hidden;
+  border: 1px solid rgba(246, 243, 236, 0.08);
 }
 
 .loading-bar {
-  position: absolute;
-  left: -40%;
-  width: 40%;
   height: 100%;
+  width: 100%;
   border-radius: 999px;
-  background: linear-gradient(120deg, var(--accent), var(--accent-2));
+  background: linear-gradient(
+      90deg,
+      rgba(100, 242, 200, 0.15) 0%,
+      rgba(100, 242, 200, 0.45) 25%,
+      rgba(255, 122, 92, 0.55) 55%,
+      rgba(100, 242, 200, 0.45) 75%,
+      rgba(100, 242, 200, 0.15) 100%
+    );
+  background-size: 220% 100%;
+  box-shadow: 0 0 16px rgba(100, 242, 200, 0.35);
+  opacity: 0;
+  transform: scaleX(0.98);
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
 .loading.active .loading-bar {
-  animation: sweep 1.8s ease-in-out infinite;
+  opacity: 1;
+  transform: scaleX(1);
+  animation: shimmer 1.8s ease-in-out infinite;
 }
 
-@keyframes sweep {
+@keyframes shimmer {
   0% {
-    left: -40%;
-  }
-  50% {
-    left: 100%;
+    background-position: 0% 50%;
   }
   100% {
-    left: -40%;
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes ghostPulse {
+  0% {
+    box-shadow: 0 0 0 rgba(100, 242, 200, 0.0);
+  }
+  30% {
+    box-shadow: 0 0 24px rgba(100, 242, 200, 0.45);
+  }
+  100% {
+    box-shadow: 0 0 0 rgba(100, 242, 200, 0.0);
   }
 }
 

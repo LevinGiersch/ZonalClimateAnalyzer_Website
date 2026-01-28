@@ -356,6 +356,7 @@ export default function App() {
   const [message, setMessage] = useState('');
   const [results, setResults] = useState([]);
   const [zipUrl, setZipUrl] = useState('');
+  const [downloadPulse, setDownloadPulse] = useState(false);
 
   const hint = useMemo(() => {
     if (!file) return t.acceptedHint;
@@ -556,6 +557,8 @@ export default function App() {
 
   const downloadAll = useCallback(() => {
     if (!zipUrl) return;
+    setDownloadPulse(true);
+    setTimeout(() => setDownloadPulse(false), 700);
     const link = document.createElement('a');
     link.href = zipUrl;
     link.download = '';
@@ -692,7 +695,12 @@ export default function App() {
                 <h2>{t.resultsTitle}</h2>
               <p>{t.resultsSubtitle}</p>
               </div>
-            <button className="ghost" type="button" onClick={downloadAll} disabled={!zipUrl}>
+            <button
+              className={`ghost ${downloadPulse ? 'pulse' : ''}`}
+              type="button"
+              onClick={downloadAll}
+              disabled={!zipUrl}
+            >
               {t.downloadAll}
             </button>
           </div>
