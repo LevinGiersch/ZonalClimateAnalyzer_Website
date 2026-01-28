@@ -38,6 +38,43 @@ body {
   gap: 32px;
 }
 
+.lang-switch {
+  position: absolute;
+  top: 24px;
+  right: clamp(24px, 6vw, 90px);
+  display: inline-flex;
+  gap: 8px;
+  padding: 6px;
+  border-radius: 999px;
+  background: rgba(12, 15, 18, 0.6);
+  border: 1px solid var(--line);
+  z-index: 2;
+}
+
+.lang-button {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  font-size: 18px;
+  line-height: 1;
+  display: grid;
+  place-items: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.lang-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.35);
+}
+
+.lang-button.active {
+  background: rgba(246, 243, 236, 0.16);
+  border: 1px solid rgba(246, 243, 236, 0.22);
+}
+
 .glow {
   position: absolute;
   inset: 0;
@@ -536,6 +573,11 @@ p {
 @media (max-width: 720px) {
   .page {
     padding-top: 40px;
+  }
+
+  .lang-switch {
+    top: 12px;
+    right: 16px;
   }
 
   .card {

@@ -20,29 +20,101 @@ L.Icon.Default.mergeOptions({
   shadowUrl: new URL('leaflet/dist/images/marker-shadow.png', import.meta.url).href
 });
 
-function humanStatus(state) {
-  switch (state) {
-    case 'uploading':
-      return 'Upload läuft…';
-    case 'processing':
-      return 'Rasterstatistiken und Plots werden erstellt…';
-    case 'done':
-      return 'Diagramme sind fertig.';
-    case 'error':
-      return 'Etwas ist schiefgelaufen.';
-    default:
-      return 'Bereit.';
+const TEXT = {
+  de: {
+    eyebrow: 'Klimatrends Deutschland',
+    title: 'Klimatrends für jede Fläche in Deutschland – schnell, nachvollziehbar, publikationsreif.',
+    intro:
+      'Zeichne ein Polygon oder lade eine Vektordatei hoch. Wir erzeugen eine Karte sowie Diagramme mit jährlichen Werten für Temperatur, Niederschlag, Sonnenschein und Vegetationsperiode für die Fläche seit 1951. Dazu werden offizielle Daten des Deutschen Wetterdienst genutzt. Das alle gratis und ohne Account!',
+    donateLead: 'Wenn du spenden möchtest:',
+    donateHelp: 'Damit hilfst du mir, diese Website weiterhin kostenlos für alle bereitzustellen.',
+    tabDraw: 'Auf der Karte zeichnen',
+    tabUpload: 'Datei hochladen',
+    hintDraw: 'Zeichne ein Polygon innerhalb der Grenze von Deutschland und klicke auf den Button rechts.',
+    actionDraw: 'Gezeichnete Fläche analysieren',
+    uploadTitle: 'Shapefile, GeoPackage oder GeoJSON hier ablegen',
+    uploadSubtitle: 'oder klicken zum Auswählen',
+    uploadButtonIdle: 'Fläche analysieren',
+    uploadButtonBusy: 'Upload läuft…',
+    acceptedHint: 'Akzeptierte Dateiformate: .zip (Shapefile mit .prj), .gpkg, .geojson',
+    tooLarge: `Datei ist zu groß. Maximal ${MAX_UPLOAD_MB} MB.`,
+    missingFile: 'Bitte zuerst eine Datei auswählen.',
+    invalidType: 'Bitte eine .zip-, .shp-, .gpkg- oder .geojson-Datei hochladen.',
+    statusUploading: 'Upload läuft…',
+    statusProcessing: 'Rasterstatistiken und Plots werden erstellt…',
+    statusDone: 'Diagramme sind fertig.',
+    statusError: 'Etwas ist schiefgelaufen.',
+    statusIdle: 'Bereit.',
+    loadingActive: 'Daten werden verarbeitet. Das kann ein paar Minuten dauern…',
+    loadingIdle: 'Bereit',
+    analyzeFailed: 'Analyse fehlgeschlagen.',
+    analyzeTimeout: 'Analyse dauert zu lange. Bitte später erneut versuchen.',
+    unexpectedError: 'Unerwarteter Fehler.',
+    resultsTitle: 'Ergebnisse',
+    resultsSubtitle: 'Diagramme herunterladen oder die interaktive Karte öffnen.',
+    downloadAll: 'Alle Ausgaben herunterladen',
+    mapTile: 'Interaktive Karte öffnen',
+    mapTileShort: 'Interaktive Karte',
+    newTab: 'Neuer Tab',
+    footerSupport:
+      'Unterstütze dieses Projekt. Deine Spende hilft mir, die Website als Solo-Developer weiterhin kostenlos zu betreiben. Für die Berechnungen werden Daten des Deutscher Wetterdienst genutzt.',
+    impressum: 'Impressum'
+  },
+  en: {
+    eyebrow: 'Climate Trends Germany',
+    title: 'Climate trends for any area in Germany — fast, transparent, publication-ready.',
+    intro:
+      'Draw a polygon or upload a vector file. We generate a map and charts with annual values for temperature, precipitation, sunshine and vegetation period for the area since 1951. We use official data from the German Weather Service. All free, no account required.',
+    donateLead: 'If you want to donate:',
+    donateHelp: 'This helps me keep the website free for everyone.',
+    tabDraw: 'Draw on the map',
+    tabUpload: 'Upload a file',
+    hintDraw: 'Draw a polygon inside Germany’s boundary and click the button on the right.',
+    actionDraw: 'Analyze drawn area',
+    uploadTitle: 'Drop a Shapefile, GeoPackage or GeoJSON here',
+    uploadSubtitle: 'or click to select',
+    uploadButtonIdle: 'Analyze area',
+    uploadButtonBusy: 'Uploading…',
+    acceptedHint: 'Accepted file types: .zip (Shapefile with .prj), .gpkg, .geojson',
+    tooLarge: `File is too large. Max ${MAX_UPLOAD_MB} MB.`,
+    missingFile: 'Please select a file first.',
+    invalidType: 'Please upload a .zip, .shp, .gpkg, or .geojson file.',
+    statusUploading: 'Uploading…',
+    statusProcessing: 'Generating raster stats and plots…',
+    statusDone: 'Charts are ready.',
+    statusError: 'Something went wrong.',
+    statusIdle: 'Ready.',
+    loadingActive: 'Processing data. This can take a few minutes…',
+    loadingIdle: 'Ready',
+    analyzeFailed: 'Analysis failed.',
+    analyzeTimeout: 'Analysis is taking too long. Please try again later.',
+    unexpectedError: 'Unexpected error.',
+    resultsTitle: 'Results',
+    resultsSubtitle: 'Download charts or open the interactive map.',
+    downloadAll: 'Download all outputs',
+    mapTile: 'Open interactive map',
+    mapTileShort: 'Interactive map',
+    newTab: 'New tab',
+    footerSupport:
+      'Support this project. Your donation helps me keep the site free as a solo developer. Calculations use data from the German Weather Service.',
+    impressum: 'Imprint'
   }
-}
+};
 
-function LoadingBar({ active }) {
+const resolveInitialLang = () => {
+  if (typeof navigator === 'undefined') return 'de';
+  const raw = navigator.language || navigator.userLanguage || '';
+  return raw.toLowerCase().startsWith('de') ? 'de' : 'en';
+};
+
+function LoadingBar({ active, labelActive, labelIdle }) {
   return (
       <div className={`loading ${active ? 'active' : ''}`}>
         <div className="loading-track">
           <div className="loading-bar" />
         </div>
         <span className="loading-label">
-        {active ? 'Daten werden verarbeitet. Das kann ein paar Minuten dauern…' : 'Bereit'}
+        {active ? labelActive : labelIdle}
         </span>
       </div>
   );
@@ -267,6 +339,8 @@ function toApiUrl(url) {
 }
 
 export default function App() {
+  const [lang, setLang] = useState(resolveInitialLang);
+  const t = TEXT[lang] || TEXT.de;
   const [mode, setMode] = useState('draw');
   const [file, setFile] = useState(null);
   const [drawnGeojson, setDrawnGeojson] = useState(null);
@@ -277,9 +351,24 @@ export default function App() {
   const [zipUrl, setZipUrl] = useState('');
 
   const hint = useMemo(() => {
-    if (!file) return 'Akzeptierte Dateiformate: .zip (Shapefile mit .prj), .gpkg, .geojson';
+    if (!file) return t.acceptedHint;
     return `${file.name} · ${(file.size / 1024 / 1024).toFixed(2)} MB`;
-  }, [file]);
+  }, [file, t.acceptedHint]);
+
+  const humanStatus = (state) => {
+    switch (state) {
+      case 'uploading':
+        return t.statusUploading;
+      case 'processing':
+        return t.statusProcessing;
+      case 'done':
+        return t.statusDone;
+      case 'error':
+        return t.statusError;
+      default:
+        return t.statusIdle;
+    }
+  };
 
   const resetStatus = () => {
     setResults([]);
@@ -315,7 +404,7 @@ export default function App() {
     const next = event.target.files?.[0] || null;
     if (next && next.size / 1024 / 1024 > MAX_UPLOAD_MB) {
       setFile(null);
-      setMessage(`Datei ist zu groß. Maximal ${MAX_UPLOAD_MB} MB.`);
+      setMessage(t.tooLarge);
       setStatus('error');
       return;
     }
@@ -328,7 +417,7 @@ export default function App() {
     const next = event.dataTransfer.files?.[0] || null;
     if (next && next.size / 1024 / 1024 > MAX_UPLOAD_MB) {
       setFile(null);
-      setMessage(`Datei ist zu groß. Maximal ${MAX_UPLOAD_MB} MB.`);
+      setMessage(t.tooLarge);
       setStatus('error');
       return;
     }
@@ -343,14 +432,14 @@ export default function App() {
   const submitUpload = async (event) => {
     event.preventDefault();
     if (!file) {
-      setMessage('Bitte zuerst eine Datei auswählen.');
+      setMessage(t.missingFile);
       setStatus('error');
       return;
     }
 
     const ext = `.${file.name.split('.').pop()}`.toLowerCase();
     if (!ACCEPTED.includes(ext)) {
-      setMessage('Bitte eine .zip-, .shp-, .gpkg- oder .geojson-Datei hochladen.');
+      setMessage(t.invalidType);
       setStatus('error');
       return;
     }
@@ -373,7 +462,7 @@ export default function App() {
 
       const payload = await readJson(response);
       if (!response.ok) {
-        throw new Error(payload?.detail || response.statusText || 'Analyse fehlgeschlagen.');
+        throw new Error(payload?.detail || response.statusText || t.analyzeFailed);
       }
 
       const outputs = (payload.outputs || []).map((item) => ({
@@ -383,13 +472,13 @@ export default function App() {
       setResults(outputs);
       setZipUrl(toApiUrl(payload.zipUrl));
       setStatus('done');
-      setMessage(payload.message || 'Erfolg.');
+      setMessage(payload.message || t.statusDone);
     } catch (error) {
       setStatus('error');
       if (error.name === 'AbortError') {
-        setMessage('Analyse dauert zu lange. Bitte später erneut versuchen.');
+        setMessage(t.analyzeTimeout);
       } else {
-        setMessage(error.message || 'Unerwarteter Fehler.');
+        setMessage(error.message || t.unexpectedError);
       }
     } finally {
       clearTimeout(processingTimer);
@@ -398,7 +487,7 @@ export default function App() {
 
   const submitDraw = async () => {
     if (!drawnGeojson) {
-      setMessage('Bitte zuerst ein Polygon auf der Karte zeichnen.');
+      setMessage(t.hintDraw);
       setStatus('error');
       return;
     }
@@ -422,7 +511,7 @@ export default function App() {
 
       const payload = await readJson(response);
       if (!response.ok) {
-        throw new Error(payload?.detail || response.statusText || 'Analyse fehlgeschlagen.');
+        throw new Error(payload?.detail || response.statusText || t.analyzeFailed);
       }
 
       const outputs = (payload.outputs || []).map((item) => ({
@@ -432,13 +521,13 @@ export default function App() {
       setResults(outputs);
       setZipUrl(toApiUrl(payload.zipUrl));
       setStatus('done');
-      setMessage(payload.message || 'Erfolg.');
+      setMessage(payload.message || t.statusDone);
     } catch (error) {
       setStatus('error');
       if (error.name === 'AbortError') {
-        setMessage('Analyse dauert zu lange. Bitte später erneut versuchen.');
+        setMessage(t.analyzeTimeout);
       } else {
-        setMessage(error.message || 'Unerwarteter Fehler.');
+        setMessage(error.message || t.unexpectedError);
       }
     } finally {
       clearTimeout(processingTimer);
@@ -474,24 +563,46 @@ export default function App() {
   return (
     <div className="page">
       <div className="glow" />
+      <div className="lang-switch" role="group" aria-label="Language switch">
+        <button
+          type="button"
+          className={`lang-button ${lang === 'de' ? 'active' : ''}`}
+          onClick={() => setLang('de')}
+          aria-label="Deutsch"
+          title="Deutsch"
+        >
+          🇩🇪
+        </button>
+        <button
+          type="button"
+          className={`lang-button ${lang === 'en' ? 'active' : ''}`}
+          onClick={() => setLang('en')}
+          aria-label="English"
+          title="English"
+        >
+          🇬🇧
+        </button>
+      </div>
       <header className="hero">
-        <div className="eyebrow">ZonalClimateAnalyzer</div>
-        <h1>Klimatrends für jede Fläche in Deutschland - schnell, einfach und gratis.</h1>
-			<p>
-			  Zeichne eine Fläche auf der Karte oder lade eine Vektordatei hoch. Diese Web-App erzeugt eine interaktive Karte sowie Diagramme mit jährlichen Werten für Temperatur, Niederschlag, Sonnenschein und Vegetationsperiode für die gezeichnete bzw. hochgeladene Fläche. Dafür werden offizielle Daten des Deutschen Wetterdienstes genutzt.
-			  Alles gratis und ohne Account!
-			  Wenn du spenden möchtest: <a href="https://buymeacoffee.com/levingiersch" target="_blank" rel="noopener noreferrer">buymeacoffee.com/levingiersch</a>.
-			  Damit hilfst du mir, diese Website weiterhin kostenlos für alle bereitzustellen.
-			</p>
+        <div className="eyebrow">{t.eyebrow}</div>
+        <h1>{t.title}</h1>
+        <p>
+          {t.intro}{' '}
+          {t.donateLead}{' '}
+          <a href="https://buymeacoffee.com/levingiersch" target="_blank" rel="noopener noreferrer">
+            buymeacoffee.com/levingiersch
+          </a>
+          . {t.donateHelp}
+        </p>
       </header>
 
       <section className="card">
         <div className="tabs">
           <button className={`tab ${mode === 'draw' ? 'active' : ''}`} onClick={() => setMode('draw')}>
-            Auf der Karte zeichnen
+            {t.tabDraw}
           </button>
           <button className={`tab ${mode === 'upload' ? 'active' : ''}`} onClick={() => setMode('upload')}>
-            Datei hochladen
+            {t.tabUpload}
           </button>
         </div>
 
@@ -517,10 +628,10 @@ export default function App() {
             </div>
             <div className="map-actions">
               <div className="hint">
-                Zeichne ein Polygon innerhalb der Grenze von Deutschland und klicke auf den Button rechts.
+                {t.hintDraw}
               </div>
               <button className="primary" onClick={submitDraw} disabled={status === 'uploading' || status === 'processing'}>
-                Gezeichnete Fläche analysieren
+                {t.actionDraw}
               </button>
             </div>
           </div>
@@ -534,14 +645,14 @@ export default function App() {
                 accept={ACCEPTED.join(',')}
               />
               <label htmlFor="file">
-                <span className="title">Shapefile, GeoPackage oder GeoJSON hier ablegen</span>
-                <span className="subtitle">oder klicken zum Auswählen</span>
+                <span className="title">{t.uploadTitle}</span>
+                <span className="subtitle">{t.uploadSubtitle}</span>
               </label>
             </div>
             <div className="meta">
               <div className="hint">{hint}</div>
               <button className="primary" type="submit" disabled={!file || status === 'uploading'}>
-                {status === 'uploading' ? 'Upload läuft…' : 'Fläche analysieren'}
+                {status === 'uploading' ? t.uploadButtonBusy : t.uploadButtonIdle}
               </button>
             </div>
           </form>
@@ -551,18 +662,22 @@ export default function App() {
           <span>{humanStatus(status)}</span>
           {message ? <span className="message">{message}</span> : null}
         </div>
-        <LoadingBar active={status === 'uploading' || status === 'processing'} />
+        <LoadingBar
+          active={status === 'uploading' || status === 'processing'}
+          labelActive={t.loadingActive}
+          labelIdle={t.loadingIdle}
+        />
       </section>
 
       {results.length > 0 ? (
         <section className="results">
             <div className="results-header">
               <div>
-                <h2>Ergebnisse</h2>
-              <p>Diagramme herunterladen oder die interaktive Karte öffnen.</p>
+                <h2>{t.resultsTitle}</h2>
+              <p>{t.resultsSubtitle}</p>
               </div>
             <button className="ghost" type="button" onClick={downloadAll} disabled={!zipUrl}>
-              Alle Ausgaben herunterladen
+              {t.downloadAll}
             </button>
           </div>
 
@@ -588,11 +703,11 @@ export default function App() {
                       strokeLinecap="round"
                     />
                   </svg>
-                  <span>Interaktive Karte</span>
+                  <span>{t.mapTileShort}</span>
                 </div>
                 <div className="plot-meta">
-                  <span>{maps[0].label || 'Interaktive Karte öffnen'}</span>
-                  <span className="tag">Neuer Tab</span>
+                  <span>{maps[0].label || t.mapTile}</span>
+                  <span className="tag">{t.newTab}</span>
                 </div>
               </a>
             ) : null}
@@ -610,15 +725,13 @@ export default function App() {
 
       <footer className="footer">
         <span>
-          Unterstütze dieses Projekt. Deine Spende hilft mir, die Website als Solo-Developer
-          weiterhin kostenlos zu betreiben. Für die Berechnungen werden Daten des Deutscher
-          Wetterdienst genutzt.{" "}
+          {t.footerSupport}{' '}
           <a href="https://opendata.dwd.de/" target="_blank" rel="noreferrer">
             opendata.dwd.de
           </a>
         </span>
         <div className="impressum">
-          <span>Impressum</span>
+          <span>{t.impressum}</span>
           <span>Levin Giersch</span>
           <a href="mailto:levin.giersch@tutamail.com">levin.giersch@tutamail.com</a>
           <a href="https://github.com/LevinGiersch" target="_blank" rel="noreferrer">
