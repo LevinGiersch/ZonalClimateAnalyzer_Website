@@ -564,13 +564,14 @@ export default function App() {
             </button>
           </div>
 
-          {maps.length > 0 ? (
-            <div className="map">
-              <iframe title="karte" src={maps[0].url} loading="lazy" />
-            </div>
-          ) : null}
-
           <div className="grid">
+            {maps.length > 0 ? (
+              <a className="plot map-tile" href={maps[0].url} target="_blank" rel="noreferrer">
+                <div className="plot-meta">
+                  <span>{maps[0].label || 'Interaktive Karte öffnen'}</span>
+                </div>
+              </a>
+            ) : null}
             {plots.map((plot) => (
               <a key={plot.url} className="plot" href={plot.url} target="_blank" rel="noreferrer">
                 <img src={plot.url} alt={plot.label || plot.name} loading="lazy" />
