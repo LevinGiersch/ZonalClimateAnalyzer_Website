@@ -310,6 +310,31 @@ p {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+.map-tile {
+  background: linear-gradient(140deg, rgba(100, 242, 200, 0.12), rgba(255, 122, 92, 0.08));
+  border: 1px solid rgba(100, 242, 200, 0.25);
+}
+
+.map-tile-visual {
+  display: grid;
+  place-items: center;
+  gap: 8px;
+  min-height: 140px;
+  border-radius: 14px;
+  background: rgba(12, 15, 18, 0.65);
+  border: 1px solid rgba(246, 243, 236, 0.08);
+  color: var(--accent);
+  font-family: 'Space Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 11px;
+}
+
+.map-icon {
+  width: 56px;
+  height: 56px;
+}
+
 .plot img {
   width: 100%;
   border-radius: 12px;
@@ -365,6 +390,25 @@ p {
   text-transform: uppercase;
   letter-spacing: 0.18em;
   color: rgba(246, 243, 236, 0.6);
+}
+
+.impressum {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: rgba(12, 15, 18, 0.45);
+}
+
+.impressum a {
+  color: var(--bg-ink);
+  text-decoration: none;
+}
+
+.impressum a:hover {
+  text-decoration: underline;
 }
 
 .bmc-button img {

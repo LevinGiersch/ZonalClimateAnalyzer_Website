@@ -567,8 +567,30 @@ export default function App() {
           <div className="grid">
             {maps.length > 0 ? (
               <a className="plot map-tile" href={maps[0].url} target="_blank" rel="noreferrer">
+                <div className="map-tile-visual" aria-hidden="true">
+                  <svg viewBox="0 0 64 64" className="map-icon" role="presentation">
+                    <path
+                      d="M12 14c0-1.1.9-2 2-2h8c.3 0 .6.1.9.2l10.2 4.1c.6.2 1.2.2 1.8 0l10.2-4.1c.3-.1.6-.2.9-.2h8c1.1 0 2 .9 2 2v36c0 1.1-.9 2-2 2h-8c-.3 0-.6-.1-.9-.2l-10.2-4.1c-.6-.2-1.2-.2-1.8 0l-10.2 4.1c-.3.1-.6.2-.9.2h-8c-1.1 0-2-.9-2-2V14z"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinejoin="round"
+                    />
+                    <path d="M22 12v40" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+                    <path d="M42 12v40" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+                    <path
+                      d="M16 26c5-4 11-4 16 0s11 4 16 0"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  <span>Interaktive Karte</span>
+                </div>
                 <div className="plot-meta">
                   <span>{maps[0].label || 'Interaktive Karte öffnen'}</span>
+                  <span className="tag">Neuer Tab</span>
                 </div>
               </a>
             ) : null}
@@ -593,6 +615,14 @@ export default function App() {
             opendata.dwd.de
           </a>
         </span>
+        <div className="impressum">
+          <span>Impressum</span>
+          <span>Levin Giersch</span>
+          <a href="mailto:levin.giersch@tutamail.com">levin.giersch@tutamail.com</a>
+          <a href="https://github.com/LevinGiersch" target="_blank" rel="noreferrer">
+            github.com/LevinGiersch
+          </a>
+        </div>
         <a
           className="bmc-button"
           href="https://www.buymeacoffee.com/levingiersch"
