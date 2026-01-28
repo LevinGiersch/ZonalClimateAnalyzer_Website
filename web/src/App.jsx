@@ -257,6 +257,15 @@ async function fetchWithTimeout(url, options = {}, timeoutMs = 0) {
   }
 }
 
+function toApiUrl(url) {
+  if (!url) return '';
+  if (/^https?:\/\//i.test(url)) return url;
+  if (url.startsWith('/')) {
+    return apiUrl(url);
+  }
+  return apiUrl(`/${url}`);
+}
+
 export default function App() {
   const [mode, setMode] = useState('draw');
   const [file, setFile] = useState(null);
@@ -367,8 +376,12 @@ export default function App() {
         throw new Error(payload?.detail || response.statusText || 'Analyse fehlgeschlagen.');
       }
 
-      setResults(payload.outputs || []);
-      setZipUrl(payload.zipUrl || '');
+      const outputs = (payload.outputs || []).map((item) => ({
+        ...item,
+        url: toApiUrl(item.url)
+      }));
+      setResults(outputs);
+      setZipUrl(toApiUrl(payload.zipUrl));
       setStatus('done');
       setMessage(payload.message || 'Erfolg.');
     } catch (error) {
@@ -412,8 +425,12 @@ export default function App() {
         throw new Error(payload?.detail || response.statusText || 'Analyse fehlgeschlagen.');
       }
 
-      setResults(payload.outputs || []);
-      setZipUrl(payload.zipUrl || '');
+      const outputs = (payload.outputs || []).map((item) => ({
+        ...item,
+        url: toApiUrl(item.url)
+      }));
+      setResults(outputs);
+      setZipUrl(toApiUrl(payload.zipUrl));
       setStatus('done');
       setMessage(payload.message || 'Erfolg.');
     } catch (error) {
