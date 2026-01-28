@@ -22,12 +22,15 @@ L.Icon.Default.mergeOptions({
 
 const TEXT = {
   de: {
-    eyebrow: 'Klimatrends Deutschland',
-    title: 'Klimatrends für jede Fläche in Deutschland – schnell, nachvollziehbar, publikationsreif.',
-    intro:
-      'Zeichne ein Polygon oder lade eine Vektordatei hoch. Wir erzeugen eine Karte sowie Diagramme mit jährlichen Werten für Temperatur, Niederschlag, Sonnenschein und Vegetationsperiode für die Fläche seit 1951. Dazu werden offizielle Daten des Deutschen Wetterdienst genutzt. Das alle gratis und ohne Account!',
-    donateLead: 'Wenn du spenden möchtest:',
-    donateHelp: 'Damit hilfst du mir, diese Website weiterhin kostenlos für alle bereitzustellen.',
+    eyebrow: 'Zonal Climate Analyzer',
+    title: 'Klimatrends für beliebige Flächen in Deutschland – schnell, einfach und kostenlos.',
+    introLead:
+      'Definieren Sie eine Fläche direkt auf der Karte oder laden Sie eine Vektordatei hoch. Die Webanwendung erstellt automatisch eine Karte sowie Diagramme mit jährlichen Zeitreihen zu:',
+    introList: ['Lufttemperatur', 'Niederschlag', 'Sonnenscheindauer', 'Vegetationsperiode'],
+    introSource: 'Die Auswertungen basieren auf offiziellen Klimadaten des Deutschen Wetterdienstes (DWD).',
+    introFree: 'Die Nutzung ist kostenlos, ohne Registrierung und ohne Account möglich.',
+    donateLead: 'Wenn Sie das Projekt unterstützen möchten, können Sie freiwillig spenden:',
+    donateHelp: 'Ihre Unterstützung hilft dabei, diese Anwendung dauerhaft frei zugänglich zu halten.',
     tabDraw: 'Auf der Karte zeichnen',
     tabUpload: 'Datei hochladen',
     hintDraw: 'Zeichne ein Polygon innerhalb der Grenze von Deutschland und klicke auf den Button rechts.',
@@ -63,8 +66,12 @@ const TEXT = {
   en: {
     eyebrow: 'Climate Trends Germany',
     title: 'Climate trends for any area in Germany — fast, transparent, publication-ready.',
-    intro:
-      'Draw a polygon or upload a vector file. We generate a map and charts with annual values for temperature, precipitation, sunshine and vegetation period for the area since 1951. We use official data from the German Weather Service. All free, no account required.',
+    introLead:
+      'Define an area directly on the map or upload a vector file. The web application automatically creates a map and charts with annual time series for:',
+    introList: ['Air temperature', 'Precipitation', 'Sunshine duration', 'Growing season'],
+    introSource:
+      'The analyses are based on official climate data from the German Weather Service (DWD).',
+    introFree: 'Use is free of charge, with no registration and no account required.',
     donateLead: 'If you want to donate:',
     donateHelp: 'This helps me keep the website free for everyone.',
     tabDraw: 'Draw on the map',
@@ -586,14 +593,23 @@ export default function App() {
       <header className="hero">
         <div className="eyebrow">{t.eyebrow}</div>
         <h1>{t.title}</h1>
-        <p>
-          {t.intro}{' '}
-          {t.donateLead}{' '}
-          <a href="https://buymeacoffee.com/levingiersch" target="_blank" rel="noopener noreferrer">
-            buymeacoffee.com/levingiersch
-          </a>
-          . {t.donateHelp}
-        </p>
+        <div className="intro">
+          <p>{t.introLead}</p>
+          <ul>
+            {t.introList.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+          <p>{t.introSource}</p>
+          <p>{t.introFree}</p>
+          <p>
+            {t.donateLead}{' '}
+            <a href="https://buymeacoffee.com/levingiersch" target="_blank" rel="noopener noreferrer">
+              buymeacoffee.com/levingiersch
+            </a>
+          </p>
+          <p>{t.donateHelp}</p>
+        </div>
       </header>
 
       <section className="card">
