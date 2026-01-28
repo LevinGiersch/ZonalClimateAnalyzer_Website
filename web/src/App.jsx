@@ -475,12 +475,14 @@ export default function App() {
     <div className="page">
       <div className="glow" />
       <header className="hero">
-        <div className="eyebrow">Klimatrends Deutschland</div>
-        <h1>Klimatrends für jede Fläche in Deutschland – schnell, nachvollziehbar, publikationsreif.</h1>
-        <p>
-          Zeichne ein Polygon oder lade eine Vektordatei hoch. Wir erzeugen eine Karte sowie Diagramme mit jährlichen Werten für Temperatur, Niederschlag, Sonnenschein und Vegetationsperiode für die Fläche seit 1951. Dazu werden offizielle Daten des Deutschen Wetterdienst genutzt.
-          Das alle gratis und ohne Account!
-        </p>
+        <div className="eyebrow">ZonalClimateAnalyzer</div>
+        <h1>Klimatrends für jede Fläche in Deutschland - schnell, einfach und gratis.</h1>
+			<p>
+			  Zeichne eine Fläche auf der Karte oder lade eine Vektordatei hoch. Diese Web-App erzeugt eine interaktive Karte sowie Diagramme mit jährlichen Werten für Temperatur, Niederschlag, Sonnenschein und Vegetationsperiode für die gezeichnete bzw. hochgeladene Fläche. Dafür werden offizielle Daten des Deutschen Wetterdienstes genutzt.
+			  Alles gratis und ohne Account!
+			  Wenn du spenden möchtest: <a href="https://buymeacoffee.com/levingiersch" target="_blank" rel="noopener noreferrer">buymeacoffee.com/levingiersch</a>.
+			  Damit hilfst du mir, diese Website weiterhin kostenlos für alle bereitzustellen.
+			</p>
       </header>
 
       <section className="card">
