@@ -31,6 +31,8 @@ const TEXT = {
     introFree: 'Die Nutzung ist kostenlos, ohne Registrierung und ohne Account möglich.',
     donateLead: 'Wenn Sie das Projekt unterstützen möchten, können Sie freiwillig spenden:',
     donateHelp: 'Ihre Unterstützung hilft dabei, diese Anwendung dauerhaft frei zugänglich zu halten.',
+    githubLead:
+      'Wenn Sie erfahren möchten, wie die Berechnungen funktionieren, die Plots anpassen oder eigene erstellen wollen, schauen Sie auf GitHub vorbei:',
     tabDraw: 'Auf der Karte zeichnen',
     tabUpload: 'Datei hochladen',
     hintDraw: 'Zeichne ein Polygon innerhalb der Grenze von Deutschland und klicke auf den Button rechts.',
@@ -59,13 +61,14 @@ const TEXT = {
     mapTile: 'Interaktive Karte öffnen',
     mapTileShort: 'Interaktive Karte',
     newTab: 'Neuer Tab',
-    footerSupport:
-      'Unterstütze dieses Projekt. Deine Spende hilft mir, die Website als Solo-Developer weiterhin kostenlos zu betreiben. Für die Berechnungen werden Daten des Deutscher Wetterdienst genutzt.',
+    footerSupport: 'Die Berechnungen basieren auf Daten vom Deutschen Wetterdienst (DWD).',
+    supportText:
+      'Unterstützen Sie dieses Projekt. Ihre Spende hilft mir, die Website als Solo-Developer weiterhin kostenlos zur Verfügung zu stellen.',
     impressum: 'Impressum'
   },
   en: {
-    eyebrow: 'Climate Trends Germany',
-    title: 'Climate trends for any area in Germany — fast, transparent, publication-ready.',
+    eyebrow: 'Zonal Climate Analyzer',
+    title: 'Climate trends for any area in Germany — fast, easy, and free.',
     introLead:
       'Define an area directly on the map or upload a vector file. The web application automatically creates a map and charts with annual time series for:',
     introList: ['Air temperature', 'Precipitation', 'Sunshine duration', 'Growing season'],
@@ -74,6 +77,8 @@ const TEXT = {
     introFree: 'Use is free of charge, with no registration and no account required.',
     donateLead: 'If you want to donate:',
     donateHelp: 'This helps me keep the website free for everyone.',
+    githubLead:
+      'If you want to learn how the calculations work, customize the plots, or create your own, check out my GitHub:',
     tabDraw: 'Draw on the map',
     tabUpload: 'Upload a file',
     hintDraw: 'Draw a polygon inside Germany’s boundary and click the button on the right.',
@@ -102,8 +107,8 @@ const TEXT = {
     mapTile: 'Open interactive map',
     mapTileShort: 'Interactive map',
     newTab: 'New tab',
-    footerSupport:
-      'Support this project. Your donation helps me keep the site free as a solo developer. Calculations use data from the German Weather Service.',
+    footerSupport: 'Calculations use data from the Deutscher Wetterdienst (DWD).',
+    supportText: 'Support this project. Your donation helps me keep the site free as a solo developer.',
     impressum: 'Imprint'
   }
 };
@@ -607,8 +612,17 @@ export default function App() {
           <p>{t.introFree}</p>
           <p>
             {t.donateLead}{' '}
-            <a href="https://buymeacoffee.com/levingiersch" target="_blank" rel="noopener noreferrer">
-              buymeacoffee.com/levingiersch
+            <a
+              className="bmc-inline"
+              href="https://buymeacoffee.com/levingiersch"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png"
+                alt="Buy Me A Coffee"
+                loading="lazy"
+              />
             </a>
           </p>
           <p>{t.donateHelp}</p>
@@ -748,32 +762,66 @@ export default function App() {
       ) : null}
 
       <footer className="footer">
-        <span>
-          {t.footerSupport}{' '}
-          <a href="https://opendata.dwd.de/" target="_blank" rel="noreferrer">
-            opendata.dwd.de
-          </a>
-        </span>
         <div className="impressum">
           <span>{t.impressum}</span>
           <span>Levin Giersch</span>
-          <a href="mailto:levin.giersch@tutamail.com">levin.giersch@tutamail.com</a>
-          <a href="https://github.com/LevinGiersch" target="_blank" rel="noreferrer">
+          <a className="impressum-link" href="mailto:levin.giersch@tutamail.com">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path
+                fill="currentColor"
+                d="M3 6.75C3 5.78 3.78 5 4.75 5h14.5c.97 0 1.75.78 1.75 1.75v10.5c0 .97-.78 1.75-1.75 1.75H4.75A1.75 1.75 0 0 1 3 17.25V6.75Zm2.12-.25 6.53 5.22a1.5 1.5 0 0 0 1.88 0l6.53-5.22H5.12Zm14.63 2.08-5.92 4.74a3 3 0 0 1-3.66 0L4.25 8.58v8.67c0 .14.11.25.25.25h14.5c.14 0 .25-.11.25-.25V8.58Z"
+              />
+            </svg>
+            levin.giersch@tutamail.com
+          </a>
+          <a className="impressum-link" href="https://github.com/LevinGiersch" target="_blank" rel="noreferrer">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path
+                fill="currentColor"
+                d="M12 2C6.48 2 2 6.58 2 12.26c0 4.5 2.87 8.32 6.84 9.67.5.1.68-.23.68-.5 0-.25-.01-.92-.01-1.8-2.78.62-3.37-1.37-3.37-1.37-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.63.07-.63 1 .07 1.53 1.08 1.53 1.08.9 1.56 2.36 1.11 2.94.85.09-.67.35-1.11.63-1.36-2.22-.26-4.56-1.13-4.56-5.02 0-1.11.39-2.02 1.03-2.73-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.04.8-.23 1.65-.34 2.5-.35.85.01 1.7.12 2.5.35 1.91-1.32 2.75-1.04 2.75-1.04.55 1.41.2 2.45.1 2.71.64.71 1.03 1.62 1.03 2.73 0 3.9-2.35 4.76-4.59 5.01.36.33.68.97.68 1.96 0 1.41-.01 2.55-.01 2.9 0 .28.18.61.69.5A10.05 10.05 0 0 0 22 12.26C22 6.58 17.52 2 12 2Z"
+              />
+            </svg>
             github.com/LevinGiersch
           </a>
         </div>
-        <a
-          className="bmc-button"
-          href="https://www.buymeacoffee.com/levingiersch"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <img
-            src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png"
-            alt="Buy Me A Coffee"
-            loading="lazy"
-          />
-        </a>
+        <div className="github-cta">
+          <p>{t.githubLead}</p>
+          <a
+            className="github-link"
+            href="https://github.com/LevinGiersch/ZonalClimateAnalyzer"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path
+                fill="currentColor"
+                d="M12 2C6.48 2 2 6.58 2 12.26c0 4.5 2.87 8.32 6.84 9.67.5.1.68-.23.68-.5 0-.25-.01-.92-.01-1.8-2.78.62-3.37-1.37-3.37-1.37-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.63.07-.63 1 .07 1.53 1.08 1.53 1.08.9 1.56 2.36 1.11 2.94.85.09-.67.35-1.11.63-1.36-2.22-.26-4.56-1.13-4.56-5.02 0-1.11.39-2.02 1.03-2.73-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.04.8-.23 1.65-.34 2.5-.35.85.01 1.7.12 2.5.35 1.91-1.32 2.75-1.04 2.75-1.04.55 1.41.2 2.45.1 2.71.64.71 1.03 1.62 1.03 2.73 0 3.9-2.35 4.76-4.59 5.01.36.33.68.97.68 1.96 0 1.41-.01 2.55-.01 2.9 0 .28.18.61.69.5A10.05 10.05 0 0 0 22 12.26C22 6.58 17.52 2 12 2Z"
+              />
+            </svg>
+            github.com/LevinGiersch/ZonalClimateAnalyzer
+          </a>
+        </div>
+        <div className="support-cta">
+          <p>{t.supportText}</p>
+          <a
+            className="bmc-button"
+            href="https://www.buymeacoffee.com/levingiersch"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <img
+              src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png"
+              alt="Buy Me A Coffee"
+              loading="lazy"
+            />
+          </a>
+        </div>
+        <div className="dwd-cta">
+          <span>{t.footerSupport}</span>
+          <a className="dwd-logo" href="https://opendata.dwd.de/" target="_blank" rel="noreferrer">
+            <img src="/dwd-logo.png" alt="Deutscher Wetterdienst" loading="lazy" />
+          </a>
+        </div>
       </footer>
     </div>
   );

@@ -458,9 +458,7 @@ p {
   flex-wrap: wrap;
   gap: 12px;
   font-family: 'Space Mono', monospace;
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.18em;
+  font-size: 12px;
   color: rgba(246, 243, 236, 0.6);
 }
 
@@ -472,21 +470,129 @@ p {
   border-radius: 14px;
   border: 1px solid var(--line);
   background: rgba(12, 15, 18, 0.45);
+  font-size: 12px;
+}
+
+.github-cta {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: rgba(12, 15, 18, 0.45);
+  font-family: 'Space Mono', monospace;
+  font-size: 12px;
+  color: rgba(246, 243, 236, 0.6);
+  max-width: 420px;
+}
+
+.github-cta p {
+  margin: 0;
+  font-size: inherit;
+}
+
+.github-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--bg-ink);
+  text-decoration: none;
+  text-transform: none;
+  letter-spacing: normal;
+  font-size: inherit;
+}
+
+.github-link:hover {
+  text-decoration: underline;
+}
+
+.github-link svg {
+  width: 18px;
+  height: 18px;
+}
+
+.dwd-cta {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: rgba(12, 15, 18, 0.45);
+  font-family: 'Space Mono', monospace;
+  font-size: 12px;
+  color: rgba(246, 243, 236, 0.6);
+  max-width: 280px;
+}
+
+.dwd-cta a {
+  color: var(--bg-ink);
+  text-decoration: none;
+  font-size: inherit;
+}
+
+.dwd-logo img {
+  width: 220px;
+  height: auto;
+  display: block;
+}
+
+.dwd-cta a:hover {
+  text-decoration: underline;
+}
+
+.support-cta {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: rgba(12, 15, 18, 0.45);
+  font-family: 'Space Mono', monospace;
+  font-size: 12px;
+  color: rgba(246, 243, 236, 0.6);
+  max-width: 320px;
+}
+
+.support-cta p {
+  margin: 0;
+  font-size: inherit;
 }
 
 .impressum a {
   color: var(--bg-ink);
   text-decoration: none;
+  font-size: inherit;
 }
 
 .impressum a:hover {
   text-decoration: underline;
 }
 
+.impressum-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.impressum-link svg {
+  width: 16px;
+  height: 16px;
+}
+
 .bmc-button img {
   height: 60px;
   width: 217px;
   display: block;
+}
+
+.bmc-inline img {
+  height: 40px;
+  width: auto;
+  vertical-align: middle;
+  display: inline-block;
 }
 
 .loading {
