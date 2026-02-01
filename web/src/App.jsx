@@ -25,14 +25,14 @@ const TEXT = {
     eyebrow: 'Zonal Climate Analyzer',
     title: 'Klimatrends für beliebige Flächen in Deutschland – schnell, einfach und kostenlos.',
     introLead:
-      'Definieren Sie eine Fläche direkt auf der Karte oder laden Sie eine Vektordatei hoch. Die Webanwendung erstellt automatisch eine Karte sowie Diagramme mit jährlichen Zeitreihen zu:',
+      'Zeichne eine Fläche direkt auf der Karte oder lade eine Vektordatei hoch. Diese Webanwendung erstellt automatisch eine Karte und verschiedene Diagramme mit jährlichen Zeitreihen zu:',
     introList: ['Lufttemperatur', 'Niederschlag', 'Sonnenscheindauer', 'Vegetationsperiode'],
-    introSource: 'Die Auswertungen basieren auf offiziellen Klimadaten des Deutschen Wetterdienstes (DWD).',
+    introSource: 'Die Berechnungen basieren auf offiziellen Klimadaten vom Deutschen Wetterdienst (DWD).',
     introFree: 'Die Nutzung ist kostenlos, ohne Registrierung und ohne Account möglich.',
-    donateLead: 'Wenn Sie das Projekt unterstützen möchten, können Sie freiwillig spenden:',
-    donateHelp: 'Ihre Unterstützung hilft dabei, diese Anwendung dauerhaft frei zugänglich zu halten.',
+    donateLead: 'Wenn du das Projekt unterstützen möchtest, kannst du gerne freiwillig spenden:',
+    donateHelp: 'Deine Unterstützung hilft mir, diese Anwendung dauerhaft frei zugänglich zu halten.',
     githubLead:
-      'Wenn Sie erfahren möchten, wie die Berechnungen funktionieren, die Plots anpassen oder eigene erstellen wollen, schauen Sie auf GitHub vorbei:',
+      'Wenn Du erfahren willst, wie die Berechnungen funktionieren, die Diagramme anpassen oder eigene Visuallisierungen erstellen möchtest, schauen auf meinem GitHub-Account vorbei:',
     tabDraw: 'Auf der Karte zeichnen',
     tabUpload: 'Datei hochladen',
     hintDraw: 'Zeichne ein Polygon innerhalb der Grenze von Deutschland und klicke auf den Button rechts.',
@@ -63,7 +63,7 @@ const TEXT = {
     newTab: 'Neuer Tab',
     footerSupport: 'Die Berechnungen basieren auf Daten vom Deutschen Wetterdienst (DWD).',
     supportText:
-      'Unterstützen Sie dieses Projekt. Ihre Spende hilft mir, die Website als Solo-Developer weiterhin kostenlos zur Verfügung zu stellen.',
+      'Mit deiner Spende unterstützt du dieses Projekt und trägst dazu bei, dass die Website weiterhin kostenlos für alle verfügbar bleibt. Danke! ❤️',
     impressum: 'Impressum'
   },
   en: {
