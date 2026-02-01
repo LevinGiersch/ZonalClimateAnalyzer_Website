@@ -655,7 +655,7 @@ export default function App() {
       </div>
       <header className="hero">
         <div className="eyebrow">
-          <img className="site-icon" src="/Icon_2.png" alt="" aria-hidden="true" />
+          <img className="site-icon" src="/favicon.ico" alt="" aria-hidden="true" />
           <span>{t.eyebrow}</span>
         </div>
         <h1>{t.title}</h1>
