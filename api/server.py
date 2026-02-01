@@ -12,7 +12,7 @@ from contextlib import contextmanager
 from pathlib import Path
 from uuid import uuid4
 
-from fastapi import FastAPI, File, HTTPException, UploadFile
+from fastapi import FastAPI, File, HTTPException, UploadFile, Form
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -73,6 +73,13 @@ app.mount("/runs", StaticFiles(directory=RUNS_DIR), name="runs")
 
 class GeoJSONPayload(BaseModel):
     geojson: dict
+    lang: str | None = None
+
+
+def _normalize_lang(lang: str | None) -> str:
+    if not lang:
+        return "de"
+    return "en" if lang.lower().startswith("en") else "de"
 
 
 def _client_ip(request) -> str:
@@ -483,10 +490,11 @@ def _local_raster_ready() -> bool:
     return False
 
 
-def _run_analyzer(shp_path: Path, run_dir: Path) -> list[dict]:
+def _run_analyzer(shp_path: Path, run_dir: Path, lang: str | None = None) -> list[dict]:
     _purge_outputs_for_stem(shp_path.stem)
     with _analysis_lock():
         env = os.environ.copy()
+        env["ZCA_LANG"] = _normalize_lang(lang)
         if _local_raster_ready():
             env.setdefault("ZCA_SKIP_DWD_DOWNLOAD", "1")
         process = subprocess.run(
@@ -515,7 +523,7 @@ def data_coverage():
 
 
 @app.post("/api/analyze")
-async def analyze(file: UploadFile = File(...)):
+async def analyze(file: UploadFile = File(...), lang: str = Form("de")):
     _ensure_disk_space()
     _cleanup_old_runs()
     filename = file.filename or ""
@@ -560,7 +568,7 @@ async def analyze(file: UploadFile = File(...)):
             _validate_geo_limits(gdf)
             _ensure_within_coverage(gdf)
 
-        outputs = _run_analyzer(shp_path, run_dir)
+        outputs = _run_analyzer(shp_path, run_dir, lang)
         return {
             "runId": run_id,
             "message": "Analyse abgeschlossen.",
@@ -608,7 +616,7 @@ async def analyze_geojson(payload: GeoJSONPayload):
 
         shp_path = upload_dir / "drawn.shp"
         gdf.to_file(shp_path, driver="ESRI Shapefile", index=False)
-        outputs = _run_analyzer(shp_path, run_dir)
+        outputs = _run_analyzer(shp_path, run_dir, payload.lang)
         return {
             "runId": run_id,
             "message": "Analyse abgeschlossen.",

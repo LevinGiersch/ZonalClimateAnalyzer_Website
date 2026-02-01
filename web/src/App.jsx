@@ -519,6 +519,7 @@ export default function App() {
 
     const body = new FormData();
     body.append('file', file);
+    body.append('lang', lang);
 
     try {
       const response = await fetchWithTimeout(
@@ -571,7 +572,7 @@ export default function App() {
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ geojson: drawnGeojson })
+          body: JSON.stringify({ geojson: drawnGeojson, lang })
         },
         ANALYZE_TIMEOUT_MS
       );

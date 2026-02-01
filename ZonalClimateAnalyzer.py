@@ -53,30 +53,107 @@ PLOT_COLORS = {
     "amber": "#f4a261",
     "leaf": "#7ad36f",
     "violet": "#9b6bff",
-    "slate": "#9aa7b4",
-    "ink": "#1d2328",
-    "sand": "#f7f3ec",
-    "panel": "#fbf8f2",
-    "grid": "#d6cdc1"
+    "slate": "#a6b0bb",
+    "ink": "#e7edf4",
+    "sand": "#0c1116",
+    "panel": "#121821",
+    "grid": "#2b3640"
 }
 
 matplotlib.rcParams.update({
-    "figure.facecolor": "#f7f3ec",
-    "axes.facecolor": "#fbf8f2",
-    "savefig.facecolor": "#f7f3ec",
-    "axes.edgecolor": "#d6cdc1",
-    "axes.labelcolor": "#1d2328",
-    "text.color": "#1d2328",
-    "xtick.color": "#4d585f",
-    "ytick.color": "#4d585f",
-    "grid.color": "#d6cdc1",
+    "figure.facecolor": "#0c1116",
+    "axes.facecolor": "#121821",
+    "savefig.facecolor": "#0c1116",
+    "axes.edgecolor": "#2b3640",
+    "axes.labelcolor": "#e7edf4",
+    "text.color": "#e7edf4",
+    "xtick.color": "#a6b0bb",
+    "ytick.color": "#a6b0bb",
+    "grid.color": "#2b3640",
     "grid.linestyle": "-",
-    "grid.linewidth": 0.8,
-    "grid.alpha": 0.7,
+    "grid.linewidth": 0.7,
+    "grid.alpha": 0.6,
     "font.size": 11.5,
     "legend.frameon": False,
-    "legend.labelcolor": "#1d2328"
+    "legend.labelcolor": "#e7edf4"
 })
+
+PLOT_TEXT = {
+    "de": {
+        "year": "Jahr",
+        "days": "Tage",
+        "temp_c": "Temperatur in °C",
+        "air_temp_title": "Lufttemperatur (Min / Mittel / Max)",
+        "air_temp_max": "Maximale Lufttemperatur",
+        "air_temp_mean": "Mittlere Lufttemperatur",
+        "air_temp_min": "Minimale Lufttemperatur",
+        "frost_days": "Frosttage (min 0°C)",
+        "ice_days": "Eistage (max 0°C)",
+        "frost_ice_title": "Frost- und Eistage",
+        "snowcover_days": "Tage mit > 1cm Schneehöhe",
+        "snowcover_title": "Schneedeckentage",
+        "summer_days": "Sommertage (max 25°C)",
+        "hot_days": "Heiße Tage (max 30°C)",
+        "summer_hot_title": "Sommer- und Heiße Tage",
+        "precip_mm": "Niederschlag in mm",
+        "drought_index": "Trockenheitsindex (mm/°C)",
+        "precip_y": "Niederschlag (mm)",
+        "precip_title": "Niederschlag + Trockenheitsindex",
+        "precip_days_10": "Anzahl der Tage mit Niederschlagshöhe >= 10 mm",
+        "precip_days_20": "Anzahl der Tage mit Niederschlagshöhe >= 20 mm",
+        "precip_days_30": "Anzahl der Tage mit Niederschlagshöhe >= 30 mm",
+        "heavy_precip_title": "Starkniederschlagstage",
+        "sunshine_label": "Durchschnittliche Sonnenstunden pro Tag",
+        "sunshine_y": "Sonnenstunden pro Tag",
+        "sunshine_title": "Sonnenscheindauer",
+        "veg_end": "Ende der vegetativen Phase",
+        "veg_begin": "Beginn der vegetativen Phase",
+        "veg_phase": "Vegetative Phase",
+        "veg_title": "Vegetationsperiode",
+        "month_start": "Monatsbeginn",
+        "veg_length_title": "Dauer der Vegetationsperiode"
+    },
+    "en": {
+        "year": "Year",
+        "days": "Days",
+        "temp_c": "Temperature in °C",
+        "air_temp_title": "Air temperature (min / mean / max)",
+        "air_temp_max": "Maximum air temperature",
+        "air_temp_mean": "Mean air temperature",
+        "air_temp_min": "Minimum air temperature",
+        "frost_days": "Frost days (min 0°C)",
+        "ice_days": "Ice days (max 0°C)",
+        "frost_ice_title": "Frost and ice days",
+        "snowcover_days": "Days with > 1 cm snow depth",
+        "snowcover_title": "Snow cover days",
+        "summer_days": "Summer days (max 25°C)",
+        "hot_days": "Hot days (max 30°C)",
+        "summer_hot_title": "Summer and hot days",
+        "precip_mm": "Precipitation in mm",
+        "drought_index": "Drought index (mm/°C)",
+        "precip_y": "Precipitation (mm)",
+        "precip_title": "Precipitation + drought index",
+        "precip_days_10": "Days with precipitation >= 10 mm",
+        "precip_days_20": "Days with precipitation >= 20 mm",
+        "precip_days_30": "Days with precipitation >= 30 mm",
+        "heavy_precip_title": "Heavy precipitation days",
+        "sunshine_label": "Average sunshine hours per day",
+        "sunshine_y": "Sunshine hours per day",
+        "sunshine_title": "Sunshine duration",
+        "veg_end": "End of growing season",
+        "veg_begin": "Start of growing season",
+        "veg_phase": "Growing season",
+        "veg_title": "Growing season",
+        "month_start": "Month start",
+        "veg_length_title": "Length of growing season"
+    }
+}
+
+LANG = os.environ.get("ZCA_LANG", "de").lower()
+LANG = "en" if LANG.startswith("en") else "de"
+
+def t(key: str) -> str:
+    return PLOT_TEXT.get(LANG, PLOT_TEXT["de"]).get(key, PLOT_TEXT["de"].get(key, key))
 
 
 # In[2]:
@@ -767,10 +844,11 @@ def apply_plot_style(fig, ax, years, y_label, y_max=None, y_min=0, title=None):
     fig.set_size_inches(12, 6.6)
     fig.patch.set_facecolor(PLOT_COLORS["sand"])
     ax.set_facecolor(PLOT_COLORS["panel"])
-    ax.set_xlabel('Jahr', labelpad=10)
+    ax.set_xlabel(t("year"), labelpad=10)
     ax.set_ylabel(y_label, labelpad=10)
     if title:
         ax.set_title(title, fontsize=14, pad=12, fontweight="semibold")
+    year_ints = None
     if years:
         ax.set_xlim([min(years), max(years)])
         try:
@@ -849,9 +927,9 @@ def plot_air_temp_min_mean_max(rs_data: dict, shp_name: str):
     t_min  = [v for y, v in zip(map(int, years), t_min)  if y >= common_startyear]
 
     # Plot
-    ax.plot(years_filtered, t_max, color=PLOT_COLORS["coral"], linewidth=2.2, label='Maximale Lufttemperatur')
-    ax.plot(years_filtered, t_mean, color=PLOT_COLORS["mint"], linewidth=2.2, label='Mittlere Lufttemperatur')
-    ax.plot(years_filtered, t_min, color=PLOT_COLORS["ice"], linewidth=2.2, label='Minimale Lufttemperatur')
+    ax.plot(years_filtered, t_max, color=PLOT_COLORS["coral"], linewidth=2.2, label=t("air_temp_max"))
+    ax.plot(years_filtered, t_mean, color=PLOT_COLORS["mint"], linewidth=2.2, label=t("air_temp_mean"))
+    ax.plot(years_filtered, t_min, color=PLOT_COLORS["ice"], linewidth=2.2, label=t("air_temp_min"))
 
     # Fill between lines
     ax.fill_between(years_filtered, t_max, t_mean, color=PLOT_COLORS["coral"], alpha=0.18)
@@ -861,9 +939,9 @@ def plot_air_temp_min_mean_max(rs_data: dict, shp_name: str):
         fig,
         ax,
         years_filtered,
-        'Temperatur in °C',
+        t("temp_c"),
         max(t_max) * 1.2,
-        title='Lufttemperatur (Min / Mittel / Max)'
+        title=t("air_temp_title")
     )
     style_legend(ax)
 
@@ -898,8 +976,8 @@ def plot_frost_ice_days(rs_data: dict, shp_name: str):
     days_in_year_min = [0]*len(years)
 
     # Plot
-    ax.plot(years, values_mean_fd, color=PLOT_COLORS["ice"], linewidth=2.2, label='Frosttage (min 0°C)')
-    ax.plot(years, values_mean_id, color=PLOT_COLORS["deep"], linewidth=2.2, label='Eistage (max 0°C)')
+    ax.plot(years, values_mean_fd, color=PLOT_COLORS["ice"], linewidth=2.2, label=t("frost_days"))
+    ax.plot(years, values_mean_id, color=PLOT_COLORS["deep"], linewidth=2.2, label=t("ice_days"))
 
     # Fill between lines
     ax.fill_between(years, values_mean_fd, values_mean_id, color=PLOT_COLORS["ice"], alpha=0.18)
@@ -909,9 +987,9 @@ def plot_frost_ice_days(rs_data: dict, shp_name: str):
         fig,
         ax,
         years,
-        'Tage',
+        t("days"),
         max(values_mean_fd) * 1.2,
-        title='Frost- und Eistage'
+        title=t("frost_ice_title")
     )
     style_legend(ax)
 
@@ -943,7 +1021,7 @@ def plot_snowcover_days(rs_data: dict, shp_name: str):
     days_in_year_min = [0]*len(years)
 
     # Plot
-    ax.plot(years, values_mean_snd, color=PLOT_COLORS["ice"], linewidth=2.2, label='Tage mit > 1cm Schneehöhe')
+    ax.plot(years, values_mean_snd, color=PLOT_COLORS["ice"], linewidth=2.2, label=t("snowcover_days"))
 
     # Fill between lines
     ax.fill_between(years, values_mean_snd, days_in_year_min, color=PLOT_COLORS["ice"], alpha=0.18)
@@ -952,9 +1030,9 @@ def plot_snowcover_days(rs_data: dict, shp_name: str):
         fig,
         ax,
         years,
-        'Tage',
+        t("days"),
         max(values_mean_snd) * 1.2,
-        title='Schneedeckentage'
+        title=t("snowcover_title")
     )
     style_legend(ax)
 
@@ -989,8 +1067,8 @@ def plot_summer_hot_days(rs_data: dict, shp_name: str):
     days_in_year_min = [0]*len(years)
 
     # Plot
-    ax.plot(years, values_mean_sd, color=PLOT_COLORS["sun"], linewidth=2.2, label='Sommertage (max 25°C)')
-    ax.plot(years, values_mean_hd, color=PLOT_COLORS["coral"], linewidth=2.2, label='Heiße Tage (max 30°C)')
+    ax.plot(years, values_mean_sd, color=PLOT_COLORS["sun"], linewidth=2.2, label=t("summer_days"))
+    ax.plot(years, values_mean_hd, color=PLOT_COLORS["coral"], linewidth=2.2, label=t("hot_days"))
 
     # Fill between lines
     ax.fill_between(years, values_mean_hd, values_mean_sd, color=PLOT_COLORS["sun"], alpha=0.2)
@@ -1000,9 +1078,9 @@ def plot_summer_hot_days(rs_data: dict, shp_name: str):
         fig,
         ax,
         years,
-        'Tage',
+        t("days"),
         max(values_mean_sd) * 1.2,
-        title='Sommer- und Heiße Tage'
+        title=t("summer_hot_title")
     )
     style_legend(ax)
 
@@ -1032,17 +1110,17 @@ def plot_precipitaion(rs_data: dict, shp_name: str):
     values_mean_di = [di*10 for di in values_mean_di]
 
     # Plot
-    ax.plot(years, values_mean_pp, color=PLOT_COLORS["ice"], linewidth=2.2, label='Niederschlag in mm')
+    ax.plot(years, values_mean_pp, color=PLOT_COLORS["ice"], linewidth=2.2, label=t("precip_mm"))
     ax.fill_between(years, values_mean_pp, color=PLOT_COLORS["ice"], alpha=0.2)
-    ax.plot(yearsdi, values_mean_di, color=PLOT_COLORS["coral"], linewidth=2.2, label='Trockenheitsindex (mm/°C)')
+    ax.plot(yearsdi, values_mean_di, color=PLOT_COLORS["coral"], linewidth=2.2, label=t("drought_index"))
 
     apply_plot_style(
         fig,
         ax,
         years,
-        'Niederschlag (mm)',
+        t("precip_y"),
         max(values_mean_pp) * 1.2,
-        title='Niederschlag + Trockenheitsindex'
+        title=t("precip_title")
     )
     style_legend(ax)
 
@@ -1079,9 +1157,9 @@ def plot_precipitaion_days(rs_data: dict, shp_name: str):
     days_in_year_min = [0]*len(years)
 
     # Plot
-    ax.plot(years, p10, color=PLOT_COLORS["ice"], linewidth=2.2, label='Anzahl der Tage mit Niederschlagshöhe >= 10 mm')
-    ax.plot(years, p20, color=PLOT_COLORS["deep"], linewidth=2.2, label='Anzahl der Tage mit Niederschlagshöhe >= 20 mm')
-    ax.plot(years, p30, color=PLOT_COLORS["violet"], linewidth=2.2, label='Anzahl der Tage mit Niederschlagshöhe >= 30 mm')
+    ax.plot(years, p10, color=PLOT_COLORS["ice"], linewidth=2.2, label=t("precip_days_10"))
+    ax.plot(years, p20, color=PLOT_COLORS["deep"], linewidth=2.2, label=t("precip_days_20"))
+    ax.plot(years, p30, color=PLOT_COLORS["violet"], linewidth=2.2, label=t("precip_days_30"))
 
     # Fill between lines
     ax.fill_between(years, p10, p20, color=PLOT_COLORS["ice"], alpha=0.18)
@@ -1092,9 +1170,9 @@ def plot_precipitaion_days(rs_data: dict, shp_name: str):
         fig,
         ax,
         years,
-        'Tage',
+        t("days"),
         max(p10) * 1.2,
-        title='Starkniederschlagstage'
+        title=t("heavy_precip_title")
     )
     style_legend(ax)
 
@@ -1121,16 +1199,16 @@ def plot_sunshine_duration(rs_data: dict, shp_name: str):
     values_mean_sd = [sd/365 for sd in values_mean_sd]
 
     # Plot
-    ax.plot(years, values_mean_sd, color=PLOT_COLORS["sun"], linewidth=2.2, label='Durchschnittliche Sonnenstunden pro Tag')
+    ax.plot(years, values_mean_sd, color=PLOT_COLORS["sun"], linewidth=2.2, label=t("sunshine_label"))
     ax.fill_between(years, values_mean_sd, color=PLOT_COLORS["sun"], alpha=0.18)
 
     apply_plot_style(
         fig,
         ax,
         years,
-        'Sonnenstunden pro Tag',
+        t("sunshine_y"),
         max(values_mean_sd) * 1.2,
-        title='Sonnenscheindauer'
+        title=t("sunshine_title")
     )
     style_legend(ax)
 
@@ -1165,8 +1243,8 @@ def plot_vegetation_begin_end(rs_data: dict, shp_name: str):
     days_in_year_min = [0]*len(years)
 
     # Plot
-    ax.plot(years, values_mean_e, color=PLOT_COLORS["coral"], linewidth=2.2, label='Ende der vegetativen Phase')
-    ax.plot(years, values_mean_b, color=PLOT_COLORS["leaf"], linewidth=2.2, label='Begin der vegetativen Phase')
+    ax.plot(years, values_mean_e, color=PLOT_COLORS["coral"], linewidth=2.2, label=t("veg_end"))
+    ax.plot(years, values_mean_b, color=PLOT_COLORS["leaf"], linewidth=2.2, label=t("veg_begin"))
 
     # Marking the beginning of the seasons
     #ax.axhline(y=335, color='lightblue', linestyle='--', label='Winterbeginn')
@@ -1175,20 +1253,23 @@ def plot_vegetation_begin_end(rs_data: dict, shp_name: str):
     #ax.axhline(y=60, color='lightgreen', linestyle='--', label='Frühlingsbeginn')
 
     # Fill between lines
-    ax.fill_between(years, values_mean_e, values_mean_b, color=PLOT_COLORS["leaf"], alpha=0.2, label='Vegetative Phase')
+    ax.fill_between(years, values_mean_e, values_mean_b, color=PLOT_COLORS["leaf"], alpha=0.2, label=t("veg_phase"))
 
-    apply_plot_style(fig, ax, years, 'Tage', 365, title='Vegetationsperiode')
+    apply_plot_style(fig, ax, years, t("days"), 365, title=t("veg_title"))
     style_legend(ax)
 
     # Add month ticks on right side
     ax2 = ax.twinx()
     month_days = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334]
-    month_labels = ["Jan", "Feb", "Mär", "Apr", "Mai", "Jun",
-                    "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"]
+    month_labels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"] if LANG == "en" else [
+                        "Jan", "Feb", "Mär", "Apr", "Mai", "Jun",
+                        "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"
+                    ]
     ax2.set_ylim(ax.get_ylim())
     ax2.set_yticks(month_days)
     ax2.set_yticklabels(month_labels)
-    ax2.set_ylabel("Monatsbeginn", color=PLOT_COLORS["slate"])
+    ax2.set_ylabel(t("month_start"), color=PLOT_COLORS["slate"])
     ax2.tick_params(axis='y', colors=PLOT_COLORS["slate"])
 
     # Save Plot
@@ -1225,12 +1306,12 @@ def plot_vegetation_phase_length(rs_data: dict, shp_name: str):
     days_in_year_min = [0]*len(years)
 
     # Plot
-    ax.plot(years, veg_len, color=PLOT_COLORS["leaf"], linewidth=2.2, label='Vegetative Phase')
+    ax.plot(years, veg_len, color=PLOT_COLORS["leaf"], linewidth=2.2, label=t("veg_phase"))
 
     # Fill between lines
     ax.fill_between(years, veg_len, days_in_year_min, color=PLOT_COLORS["leaf"], alpha=0.2)
 
-    apply_plot_style(fig, ax, years, 'Tage', 365, title='Dauer der Vegetationsperiode')
+    apply_plot_style(fig, ax, years, t("days"), 365, title=t("veg_length_title"))
     style_legend(ax)
 
     # Save Plot
