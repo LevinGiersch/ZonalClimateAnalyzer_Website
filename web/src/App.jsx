@@ -654,7 +654,10 @@ export default function App() {
         </button>
       </div>
       <header className="hero">
-        <div className="eyebrow">{t.eyebrow}</div>
+        <div className="eyebrow">
+          <img className="site-icon" src="/Icon_2.png" alt="" aria-hidden="true" />
+          <span>{t.eyebrow}</span>
+        </div>
         <h1>{t.title}</h1>
         <div className="intro">
           <p>{t.introLead}</p>
