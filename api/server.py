@@ -82,6 +82,10 @@ def _normalize_lang(lang: str | None) -> str:
     return "en" if lang.lower().startswith("en") else "de"
 
 
+def _done_message(lang: str | None) -> str:
+    return "Analysis completed." if _normalize_lang(lang) == "en" else "Analyse abgeschlossen."
+
+
 def _client_ip(request) -> str:
     forwarded = request.headers.get("x-forwarded-for", "")
     if forwarded:
@@ -571,7 +575,7 @@ async def analyze(file: UploadFile = File(...), lang: str = Form("de")):
         outputs = _run_analyzer(shp_path, run_dir, lang)
         return {
             "runId": run_id,
-            "message": "Analyse abgeschlossen.",
+            "message": _done_message(lang),
             "outputs": outputs,
             "zipUrl": f"/api/runs/{run_id}/download",
         }
@@ -619,7 +623,7 @@ async def analyze_geojson(payload: GeoJSONPayload):
         outputs = _run_analyzer(shp_path, run_dir, payload.lang)
         return {
             "runId": run_id,
-            "message": "Analyse abgeschlossen.",
+            "message": _done_message(payload.lang),
             "outputs": outputs,
             "zipUrl": f"/api/runs/{run_id}/download",
         }
