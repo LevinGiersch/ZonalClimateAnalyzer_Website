@@ -760,4 +760,15 @@ p {
     flex-direction: column;
     align-items: flex-start;
   }
+
+  .loading {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+  }
+
+  .loading-track {
+    height: 10px;
+  }
 }
