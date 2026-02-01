@@ -364,8 +364,6 @@ p {
 }
 
 .map-tile {
-  background: linear-gradient(140deg, rgba(100, 242, 200, 0.12), rgba(255, 122, 92, 0.08));
-  border: 1px solid rgba(100, 242, 200, 0.25);
 }
 
 .map-tile-visual {
@@ -374,9 +372,10 @@ p {
   gap: 8px;
   min-height: 140px;
   border-radius: 14px;
-  background: rgba(12, 15, 18, 0.65);
-  border: 1px solid rgba(246, 243, 236, 0.08);
-  color: var(--accent);
+  background:
+    linear-gradient(140deg, rgba(12, 18, 22, 0.85), rgba(8, 12, 15, 0.6));
+  border: 1px solid rgba(146, 225, 210, 0.2);
+  color: #d5fff0;
   font-family: 'Space Mono', monospace;
   text-transform: uppercase;
   letter-spacing: 0.16em;
@@ -384,8 +383,9 @@ p {
 }
 
 .map-icon {
-  width: 56px;
-  height: 56px;
+  width: 88px;
+  height: 88px;
+  filter: drop-shadow(0 10px 16px rgba(0, 0, 0, 0.35));
 }
 
 .plot img {

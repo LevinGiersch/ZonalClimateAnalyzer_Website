@@ -113,6 +113,60 @@ const TEXT = {
   }
 };
 
+const OUTPUT_LABELS = {
+  de: {
+    lufttemperatur_min_mittel_max: 'Lufttemperatur (Min/Mittel/Max)',
+    frost_eistage: 'Frost- und Eistage',
+    schneedeckentage: 'Schneedeckentage',
+    sommer_heisse_tage: 'Sommer- und Heiße Tage',
+    niederschlag_trockenheit: 'Niederschlag + Trockenheitsindex',
+    starkniederschlag_tage: 'Starkniederschlagstage',
+    sonnenscheindauer: 'Sonnenscheindauer',
+    vegetationsperiode: 'Vegetationsperiode',
+    vegetationsperiode_dauer: 'Dauer der Vegetationsperiode',
+    map: 'Interaktive Karte'
+  },
+  en: {
+    lufttemperatur_min_mittel_max: 'Air temperature (min/mean/max)',
+    frost_eistage: 'Frost and ice days',
+    schneedeckentage: 'Snow cover days',
+    sommer_heisse_tage: 'Summer and hot days',
+    niederschlag_trockenheit: 'Precipitation + drought index',
+    starkniederschlag_tage: 'Heavy precipitation days',
+    sonnenscheindauer: 'Sunshine duration',
+    vegetationsperiode: 'Growing season',
+    vegetationsperiode_dauer: 'Growing season length',
+    map: 'Interactive map'
+  }
+};
+
+const OUTPUT_KEYS = Object.keys(OUTPUT_LABELS.de);
+const OUTPUT_LABELS_DE_REVERSE = Object.fromEntries(
+  Object.entries(OUTPUT_LABELS.de).map(([key, value]) => [value, key])
+);
+const OUTPUT_LABELS_EN_REVERSE = Object.fromEntries(
+  Object.entries(OUTPUT_LABELS.en).map(([key, value]) => [value, key])
+);
+
+const resolveOutputKey = (item) => {
+  if (!item) return null;
+  const rawName = item.name || '';
+  const baseName = rawName.replace(/\.[^/.]+$/, '');
+  for (const key of OUTPUT_KEYS) {
+    if (baseName === key || baseName.endsWith(`_${key}`)) return key;
+  }
+  const label = item.label || '';
+  if (OUTPUT_LABELS_DE_REVERSE[label]) return OUTPUT_LABELS_DE_REVERSE[label];
+  if (OUTPUT_LABELS_EN_REVERSE[label]) return OUTPUT_LABELS_EN_REVERSE[label];
+  return null;
+};
+
+const getOutputLabel = (item, lang) => {
+  const key = resolveOutputKey(item);
+  if (key) return OUTPUT_LABELS[lang]?.[key] || OUTPUT_LABELS.de[key];
+  return item?.label || item?.name || '';
+};
+
 const resolveInitialLang = () => {
   if (typeof navigator === 'undefined') return 'de';
   const raw = navigator.language || navigator.userLanguage || '';
@@ -725,35 +779,33 @@ export default function App() {
                 <div className="map-tile-visual" aria-hidden="true">
                   <svg viewBox="0 0 64 64" className="map-icon" role="presentation">
                     <path
-                      d="M12 14c0-1.1.9-2 2-2h8c.3 0 .6.1.9.2l10.2 4.1c.6.2 1.2.2 1.8 0l10.2-4.1c.3-.1.6-.2.9-.2h8c1.1 0 2 .9 2 2v36c0 1.1-.9 2-2 2h-8c-.3 0-.6-.1-.9-.2l-10.2-4.1c-.6-.2-1.2-.2-1.8 0l-10.2 4.1c-.3.1-.6.2-.9.2h-8c-1.1 0-2-.9-2-2V14z"
+                      d="M6 16.5c0-1.38 1.12-2.5 2.5-2.5H22l10 4 10-4h13.5c1.38 0 2.5 1.12 2.5 2.5v31c0 1.38-1.12 2.5-2.5 2.5H42l-10-4-10 4H8.5A2.5 2.5 0 0 1 6 47.5v-31Z"
                       fill="none"
                       stroke="currentColor"
                       strokeWidth="2.5"
                       strokeLinejoin="round"
                     />
-                    <path d="M22 12v40" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-                    <path d="M42 12v40" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+                    <path d="M22 14v36" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+                    <path d="M42 14v36" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
                     <path
-                      d="M16 26c5-4 11-4 16 0s11 4 16 0"
+                      d="M14 27c5.2-4.1 11.3-4.1 18.5 0s13.3 4.1 18.5 0"
                       fill="none"
                       stroke="currentColor"
                       strokeWidth="2.5"
                       strokeLinecap="round"
                     />
                   </svg>
-                  <span>{t.mapTileShort}</span>
                 </div>
                 <div className="plot-meta">
-                  <span>{maps[0].label || t.mapTile}</span>
-                  <span className="tag">{t.newTab}</span>
+                  <span>{getOutputLabel(maps[0], lang) || t.mapTile}</span>
                 </div>
               </a>
             ) : null}
             {plots.map((plot) => (
               <a key={plot.url} className="plot" href={plot.url} target="_blank" rel="noreferrer">
-                <img src={plot.url} alt={plot.label || plot.name} loading="lazy" />
+                <img src={plot.url} alt={getOutputLabel(plot, lang) || plot.name} loading="lazy" />
                 <div className="plot-meta">
-                  <span>{plot.label || plot.name}</span>
+                  <span>{getOutputLabel(plot, lang) || plot.name}</span>
                 </div>
               </a>
             ))}
