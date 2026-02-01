@@ -108,7 +108,7 @@ const TEXT = {
     mapTileShort: 'Interactive map',
     newTab: 'New tab',
     footerSupport: 'Calculations use data from the Deutscher Wetterdienst (DWD).',
-    supportText: 'Support this project. Your donation helps me keep the site free as a solo developer.',
+    supportText: 'Your donation helps me keep the site free for all. Thanks! ❤️',
     impressum: 'Imprint'
   }
 };
