@@ -540,7 +540,7 @@ export default function App() {
       setResults(outputs);
       setZipUrl(toApiUrl(payload.zipUrl));
       setStatus('done');
-      setMessage(payload.message || t.statusDone);
+      setMessage(t.statusDone);
     } catch (error) {
       setStatus('error');
       if (error.name === 'AbortError') {
@@ -589,7 +589,7 @@ export default function App() {
       setResults(outputs);
       setZipUrl(toApiUrl(payload.zipUrl));
       setStatus('done');
-      setMessage(payload.message || t.statusDone);
+      setMessage(t.statusDone);
     } catch (error) {
       setStatus('error');
       if (error.name === 'AbortError') {
