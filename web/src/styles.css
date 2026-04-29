@@ -19,9 +19,7 @@
 body {
   margin: 0;
   min-height: 100vh;
-  background: radial-gradient(circle at top left, rgba(100, 242, 200, 0.12) 0%, transparent 55%),
-    radial-gradient(circle at 20% 0%, rgba(255, 122, 92, 0.08) 0%, transparent 55%),
-    linear-gradient(180deg, #0c0f12 0%, #0f141a 100%);
+  background: #0c0f12;
   color: var(--bg-ink);
   font-family: 'Fraunces', serif;
 }
@@ -76,12 +74,7 @@ body {
 }
 
 .glow {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(120deg, rgba(100, 242, 200, 0.08), rgba(255, 122, 92, 0.08));
-  filter: blur(40px);
-  pointer-events: none;
-  z-index: 0;
+  display: none;
 }
 
 .hero,
@@ -191,7 +184,7 @@ p {
   border-radius: 20px;
   padding: 40px;
   text-align: center;
-  background: linear-gradient(120deg, rgba(100, 242, 200, 0.08), rgba(255, 122, 92, 0.08));
+  background: transparent;
 }
 
 .dropzone input {
@@ -236,7 +229,7 @@ p {
 
 .primary {
   border: none;
-  background: linear-gradient(120deg, #56e6c0, #ff7a5c);
+  background: var(--accent);
   color: #0c0f12;
   padding: 12px 22px;
   font-family: 'Space Mono', monospace;
