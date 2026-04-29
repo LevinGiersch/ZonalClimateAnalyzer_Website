@@ -635,12 +635,7 @@ p {
   height: 100%;
   width: 42%;
   border-radius: 999px;
-  background: linear-gradient(
-      120deg,
-      rgba(100, 242, 200, 0.2) 0%,
-      rgba(100, 242, 200, 0.7) 50%,
-      rgba(255, 122, 92, 0.6) 100%
-    );
+  background: var(--accent);
   box-shadow: 0 0 16px rgba(100, 242, 200, 0.35);
   transform: translateX(0);
   opacity: 0;
